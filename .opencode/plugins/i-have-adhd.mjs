@@ -33,9 +33,13 @@ const flagPath = path.join(
 );
 
 // Read SKILL.md and strip a leading YAML frontmatter block (--- ... ---).
+// Regex and trailing-newline trim match hooks/always-on.mjs so always-on
+// injections behave identically across harnesses (see tests/test_always_on_hooks.py).
 function rulesetBody() {
-  const raw = fs.readFileSync(skillPath, 'utf8');
-  return raw.replace(/^﻿?---\r?\n[\s\S]*?\r?\n---\r?\n/, '').trim();
+  return fs
+    .readFileSync(skillPath, 'utf8')
+    .replace(/^---[^\S\r\n]*\r?\n[\s\S]*?\r?\n---[^\S\r\n]*(?:\r?\n|$)/, '')
+    .replace(/(?:\r?\n)+$/, '');
 }
 
 export default async () => {
@@ -62,8 +66,8 @@ export default async () => {
 
       const header =
         'ADHD MODE ACTIVE (always-on). The ruleset below applies to every ' +
-        'response. "stop adhd mode" turns it off for this session; delete ' +
-        flagPath + ' to turn always-on off for good.';
+        'response. "stop adhd mode" or "normal mode" turns it off for this ' +
+        'session; delete ' + flagPath + ' to turn always-on off for good.';
       const injected = header + '\n\n' + body;
 
       if (output.system.length > 0) {
