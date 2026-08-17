@@ -12,35 +12,30 @@ type CompatibleSessionManager = {
 export function contextMessages(
   sessionManager: unknown,
 ): readonly ContextMessageMarker[] {
+  // Context inspection is advisory. If a runtime changes its session-manager
+  // API or temporarily cannot build context, report "not present" so the
+  // caller can safely re-inject the rules instead of breaking session startup.
   if (sessionManager === null || typeof sessionManager !== "object") {
-    throw new Error("Unsupported session manager: expected an object");
+    return [];
   }
 
   const compatible = sessionManager as CompatibleSessionManager;
 
-  if (typeof compatible.buildSessionContext === "function") {
-    const messages = compatible.buildSessionContext().messages;
-    if (!Array.isArray(messages)) {
-      throw new Error(
-        "Unsupported session manager: buildSessionContext() returned no messages array",
-      );
+  try {
+    if (typeof compatible.buildSessionContext === "function") {
+      const messages = compatible.buildSessionContext().messages;
+      return Array.isArray(messages) ? messages : [];
     }
-    return messages;
+
+    if (typeof compatible.buildContextEntries === "function") {
+      const entries = compatible.buildContextEntries();
+      return Array.isArray(entries) ? entries : [];
+    }
+  } catch {
+    return [];
   }
 
-  if (typeof compatible.buildContextEntries === "function") {
-    const entries = compatible.buildContextEntries();
-    if (!Array.isArray(entries)) {
-      throw new Error(
-        "Unsupported session manager: buildContextEntries() returned no entries array",
-      );
-    }
-    return entries;
-  }
-
-  throw new Error(
-    "Unsupported session manager: expected buildSessionContext() or buildContextEntries()",
-  );
+  return [];
 }
 
 export function latestMarkerIsActive(

@@ -33,17 +33,19 @@ assert(
   "Pi context entries were not returned",
 );
 
-let unsupportedFailed = false;
-try {
-  contextMessages({});
-} catch (error) {
-  unsupportedFailed =
-    error instanceof Error &&
-    error.message.includes(
-      "expected buildSessionContext() or buildContextEntries()",
-    );
-}
-assert(unsupportedFailed, "Unsupported session managers must fail closed");
+assert(
+  contextMessages({}).length === 0,
+  "Unsupported session managers must fail open",
+);
+
+assert(
+  contextMessages({
+    buildSessionContext: () => {
+      throw new Error("temporary context failure");
+    },
+  }).length === 0,
+  "Context failures must fail open",
+);
 
 assert(
   latestMarkerIsActive(
