@@ -53,13 +53,14 @@ class AlwaysOnHookTest(unittest.TestCase):
             env=env,
         )
 
-    def run_codex_hook(self):
+    def run_codex_hook(self, plugin_root=None):
         config = json.loads((ROOT / "hooks" / "hooks.json").read_text())
         hook = config["hooks"]["SessionStart"][0]["hooks"][0]
         env = os.environ.copy()
         env["CLAUDE_CONFIG_DIR"] = str(self.config_dir)
-        env["CLAUDE_PLUGIN_ROOT"] = str(self.plugin_root)
-        env["PLUGIN_ROOT"] = str(self.plugin_root)
+        plugin_root = plugin_root or self.plugin_root
+        env["CLAUDE_PLUGIN_ROOT"] = str(plugin_root)
+        env["PLUGIN_ROOT"] = str(plugin_root)
         return subprocess.run(
             hook["command"],
             check=False,
@@ -148,14 +149,24 @@ class AlwaysOnHookTest(unittest.TestCase):
         self.assertEqual("", result.stderr)
         self.assertEqual("", result.stdout)
 
+    def test_codex_command_swallows_missing_plugin_errors(self):
+        result = self.run_codex_hook(self.plugin_root / "missing plugin")
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("", result.stderr)
+        self.assertEqual("", result.stdout)
+
     def test_hook_uses_a_shared_claude_and_codex_launcher(self):
         config = json.loads((ROOT / "hooks" / "hooks.json").read_text())
         hook = config["hooks"]["SessionStart"][0]["hooks"][0]
 
         self.assertNotIn("args", hook)
-        self.assertTrue(hook["command"].startswith('node -e "'))
-        self.assertIn("process.env.CLAUDE_PLUGIN_ROOT", hook["command"])
-        self.assertIn("process.env.PLUGIN_ROOT", hook["command"])
+        command = hook["command"]
+        self.assertRegex(command, r'^node(?: --input-type=module)? -e "')
+        self.assertIn("process.env.CLAUDE_PLUGIN_ROOT", command)
+        self.assertIn("process.env.PLUGIN_ROOT", command)
+        self.assertIn("await import", command)
+        self.assertIn(".catch", command)
 
 
 if __name__ == "__main__":
