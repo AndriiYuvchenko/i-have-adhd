@@ -519,6 +519,35 @@ If `PI_CODING_AGENT_DIR` is set, put `.i-have-adhd-always` in that directory ins
 
 
 <details>
+<summary><strong>Oh My Pi (OMP)</strong></summary>
+
+### Install
+
+```bash
+omp plugin marketplace add ayghri/i-have-adhd
+omp plugin install --scope user i-have-adhd@i-have-adhd
+```
+
+Start a new OMP session and run `/i-have-adhd` to toggle the mode.
+
+### Update
+
+```bash
+omp plugin marketplace update i-have-adhd
+omp plugin upgrade --scope user i-have-adhd@i-have-adhd
+```
+
+### Uninstall
+
+```bash
+omp plugin uninstall --scope user i-have-adhd@i-have-adhd
+omp plugin marketplace remove i-have-adhd
+```
+
+</details>
+
+
+<details>
 <summary><strong>Qwen Code</strong></summary>
 
 ### Install
