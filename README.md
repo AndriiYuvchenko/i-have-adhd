@@ -20,7 +20,13 @@
 
 ## Install
 
-🔗 [Installation Instructions](INSTALL.md)
+Copy/paste into your CLI prompt:
+
+```text
+Install the i-have-adhd skill/plugin from https://github.com/ayghri/i-have-adhd, then read AGENTS.md for the repository map, runtime entry points, documentation, and verification commands.
+```
+
+Or 🔗 [check the installation instructions](INSTALL.md).
 
 ## What it does
 
