@@ -1,70 +1,89 @@
-# Contributing to i-have-adhd
+# Contributing
 
-Thank you for your interest in contributing to i-have-adhd! This document outlines the process for contributing to the project.
+Thanks for improving **i-have-adhd**. Contributions from humans and coding agents are welcome. Keep changes understandable, reviewable, safe to run, and compatible with existing users.
 
-## Getting Started
+## Authorship and provenance
 
-1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/i-have-adhd.git`
-3. Add the upstream remote: `git remote add upstream https://github.com/ayghri/i-have-adhd.git`
-4. Install dependencies: `make install`
+Every pull request must select exactly one category:
 
-## Development Workflow
+- **Human-authored** — a human made the substantive implementation and text. Autocomplete, formatting, search, and minor suggestions do not make a contribution hybrid.
+- **Autonomous agent-authored** — an agent made most substantive decisions and changes, with a human primarily providing the task and reviewing the result.
+- **Hybrid** — a human and one or more agents both made substantive decisions or changes.
 
-1. Create a branch from the latest `main`:
-   ```bash
-   git checkout main
-   git pull upstream main
-   git checkout -b feat/your-feature
-   ```
+For autonomous-agent or hybrid contributions, disclose the agent or tool and model/version when known, what it did, what the human reviewed, and any material limitations or failed checks. Do not call generated work human-authored or independently verified when it was only reviewed by the same agent that produced it.
 
-2. Make your changes and test them:
-   ```bash
-   make test
-   ```
+The submitting human remains accountable for the full diff. Before submission, read the changed files, remove unrelated generated changes, and verify the claims in the PR description.
 
-3. Commit with a clear message:
-   ```bash
-   git commit -m "feat: add amazing feature"
-   ```
+## Scope and reviewability
 
-## Commit Message Guidelines
+Keep each PR focused. Avoid drive-by formatting, unrelated dependency changes, generated filler, and broad rewrites that make behavior changes difficult to inspect.
 
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
+The PR description must explain:
 
-- `feat:` - New features
-- `fix:` - Bug fixes
-- `docs:` - Documentation changes
-- `test:` - Test additions/changes
-- `ci:` - CI/CD changes
-- `refactor:` - Code refactoring
-- `chore:` - Maintenance tasks
+1. what changed and why;
+2. observable behavior before and after;
+3. safety, compatibility, and side-effect considerations;
+4. the exact verification performed.
 
-## Pull Request Process
+Discuss large behavior changes, new integrations, new hooks, and potentially breaking changes in an issue first.
 
-1. Ensure your branch is up to date with `main`
-2. Run tests and ensure they pass
-3. Open a pull request with a clear description of the changes
-4. Link any related issues using `Closes #N` syntax
-5. Be responsive to review feedback
+## Safety and side effects
 
-## Code Style
+Contributions must not weaken platform safeguards, override higher-priority instructions, conceal risky behavior, or encourage inaccurate claims.
 
-- Follow the existing code style in the repository
-- Keep changes focused and minimal
-- Add tests for new functionality
-- Update documentation as needed
+Skill changes must stay focused on response structure and usability. Do not add instructions, examples, fixtures, or tests that tell an agent to:
 
-## Reporting Issues
+- read or transmit credentials, tokens, environment variables, private files, or repository data;
+- modify shell profiles, global Git configuration, editor settings, or unrelated agent configuration;
+- bypass confirmation for destructive, privileged, production, or externally visible actions;
+- silently install software, fetch and execute remote code, or create persistence;
+- misrepresent medical information or imply that this skill diagnoses ADHD.
 
-When reporting issues, please include:
-- A clear description of the problem
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (OS, language version, etc.)
+Installation, activation, validation, tests, and evaluations must be narrowly scoped and predictable. By default, repository code must not modify files outside the repository or a documented temporary directory, alter user configuration or credentials, publish or send data, require elevated privileges, perform irreversible actions, or leave background processes behind. Intentional writes outside the repository require explicit opt-in, documentation, a specific path, and an easy undo path.
 
-## Questions?
+## Hooks, scripts, and evaluations
 
-Feel free to open an issue with the `question` label if you need help getting started.
+Hooks run in user environments: keep them fast, bounded, fail-safe, opt-in, and free of unnecessary network access. Optional failures must not block agent startup.
 
-Thank you for contributing! 🎉
+Scripts and workflows must validate inputs and paths, avoid shell commands built from untrusted text, use temporary fixtures, avoid secrets and undeclared uploads, and use least privilege. New third-party actions, packages, CLIs, or network calls need a clear justification and data/permission description.
+
+Evaluation code must not execute model output, access production systems or unrelated user files, perform externally visible actions, or create unbounded cost. Provider-backed evaluations need explicit budgets, recorded runner/model/CLI/cases/trials/rubric, and comparable conditions. Unit tests for eval code should use stubs and temporary files without network or paid model calls.
+
+## Compatibility and breaking changes
+
+Preserve existing installation methods, invocation names, file locations, opt-in behavior, and supported integrations unless a breaking change is explicitly accepted. Potentially breaking changes include moving the canonical skill, changing invocation or hook semantics, changing manifests or installation commands, and removing a supported platform.
+
+A breaking change requires an issue, migration path, updated documentation, and a compatibility or deprecation plan. Prefer additive, staged changes.
+
+`skills/i-have-adhd/SKILL.md` is canonical. When it changes, synchronize the Cursor copy:
+
+```sh
+cp skills/i-have-adhd/SKILL.md .cursor/skills/i-have-adhd/SKILL.md
+cmp skills/i-have-adhd/SKILL.md .cursor/skills/i-have-adhd/SKILL.md
+```
+
+Review platform-specific manifests and documentation whenever shared names, descriptions, paths, or behavior change.
+
+## Verification
+
+Run relevant checks and include the commands and results in the PR. For Python and evaluation-harness changes:
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 scripts/run_evals.py validate
+```
+
+For behavior changes, add or update representative eval cases when needed, run paired baseline/candidate evaluations under the same conditions, and apply the release gate. For hook or plugin changes, verify loading in an isolated configuration directory. If a check was not run, say so and explain why; never invent results or treat inspection as execution.
+
+## Documentation and checklist
+
+Keep examples safe to copy: use harmless fixtures, explicit placeholders, and read-only previews. Never include real secrets, personal paths, production identifiers, or commands that could damage a reader's environment. Distinguish required behavior from suggestions and avoid unsupported medical, accessibility, platform, or performance claims.
+
+A PR is ready when:
+
+- one authorship category is selected and agent involvement is disclosed accurately;
+- the full diff has been reviewed by a human contributor;
+- the change is focused and free of unrelated generated edits;
+- side effects, compatibility, costs, and verification are documented.
+
+Maintainers may close PRs that conceal provenance, introduce unsafe behavior, lack verification, or make unplanned breaking changes.
