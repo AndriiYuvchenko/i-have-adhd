@@ -23,7 +23,7 @@
 Copy/paste into your CLI prompt:
 
 ```text
-Install the i-have-adhd skill/plugin from https://github.com/ayghri/i-have-adhd, then read AGENTS.md for the repository map, runtime entry points, documentation, and verification commands.
+Install the i-have-adhd skill/plugin from https://github.com/ayghri/i-have-adhd, refer to the repo's AGENTS.md for instructions.
 ```
 
 Or 🔗 [check the installation instructions](INSTALL.md).
