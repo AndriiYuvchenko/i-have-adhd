@@ -14,6 +14,16 @@ For autonomous-agent or hybrid contributions, disclose the agent or tool and mod
 
 The submitting human remains accountable for the full diff. Before submission, read the changed files, remove unrelated generated changes, and verify the claims in the PR description.
 
+## Labels
+
+Use one label from each applicable group:
+
+- **Target:** `Target:Integrations` for a CLI integration, `Target:Evals` for evaluation scripts, `Target:Rules` for skill rules, or `Target:Docs` for documentation and translations.
+- **Author:** `Author:Human`, `Author:Hybrid`, or `Author:AI`, matching the authorship category above.
+- **Workflow:** `enhancement` for a new feature, `question` when more information is needed, or `duplicate` when the issue or PR already exists.
+
+Choose the labels that describe the change; do not use labels as a substitute for the PR description or provenance disclosure. A dedicated `bug` label would complete the current workflow set for defect reports.
+
 ## Scope and reviewability
 
 Keep each PR focused. Avoid drive-by formatting, unrelated dependency changes, generated filler, and broad rewrites that make behavior changes difficult to inspect.
