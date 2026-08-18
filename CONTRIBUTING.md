@@ -20,9 +20,9 @@ Use one label from each applicable group:
 
 - **Target:** `Target:Integrations` for a CLI integration, `Target:Evals` for evaluation scripts, `Target:Rules` for skill rules, or `Target:Docs` for documentation and translations.
 - **Author:** `Author:Human`, `Author:Hybrid`, or `Author:AI`, matching the authorship category above.
-- **Workflow:** `enhancement` for a new feature, `question` when more information is needed, or `duplicate` when the issue or PR already exists.
+- **Workflow:** `bug` for defects, `enhancement` for new features, `issue` for general issue tracking, `question` when more information is needed, or `duplicate` when the issue or PR already exists.
 
-Choose the labels that describe the change; do not use labels as a substitute for the PR description or provenance disclosure. A dedicated `bug` label would complete the current workflow set for defect reports.
+Choose the labels that describe the change; do not use labels as a substitute for the PR description or provenance disclosure. Use `issue` only when no more specific workflow label applies.
 
 ## Scope and reviewability
 
