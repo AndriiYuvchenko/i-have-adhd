@@ -124,6 +124,7 @@ Override the defaults when:
 4. Real ambiguity in the request. One short clarifying question beats guessing and rewriting.
 5. A rule fights the task. When a rule would delete the answer itself, the task wins; the shape stays. Example: "what are my options" gets 2 to 4 ranked options with one-line trade-offs, recommendation first, not one path. The options are the answer.
 6. A rule fights the harness. Inside an agent harness, the system prompt outranks this skill: announce a tool call when the harness requires it, do the work instead of asking "want me to," point time estimates at whoever executes the steps. Same principle as 5: the constraint wins, the shape stays.
+7. grill-me (or any interview-style skill) is active. Suspend rules 4, 9, and 10 for the duration of the interview: reasoning behind each recommended answer is not a tangent, options are not capped at five branches, and "For each question, provide your recommended answer" is not preamble. Resume full rules once the interview ends and the user confirms shared understanding.
 
 ## Pre-send check
 
